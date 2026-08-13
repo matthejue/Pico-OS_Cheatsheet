@@ -1,0 +1,34 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Make: Build PDF",
+      "type": "shell",
+      "command": "make build-pdf",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Make: Watch and rebuild PDF",
+      "type": "shell",
+      "command": "make watch-pdf",
+      "problemMatcher": [],
+      "isBackground": true
+    },
+    {
+      "label": "Make: Clean generated PDF",
+      "type": "shell",
+      "command": "make clean-generated-pdf",
+      "problemMatcher": []
+    },
+    {
+      "label": "Make: Open PDF in browser",
+      "type": "shell",
+      "command": "make open-pdf-in-browser",
+      "problemMatcher": []
+    }
+  ]
+}
