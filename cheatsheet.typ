@@ -267,15 +267,14 @@
     ], color: green)
 
     // the Makefile targets are not so important to belong on this cheathsset. Please fill the cheatsheet with something more important
-    #card([Project build], [
-      #entry([make help], [show targets])
-      #entry([make user], [build user binaries])
-      #entry([make firmware], [build bootloader and kernel files])
-      #entry([make release-tree], [build everything under `binary/`])
-      #entry([make verify-release-tree], [check that all release files exist])
-      #entry([make bootload], [build + boot in debugger])
-      #entry([make bootload-debug], [rebuild `-g` + boot])
-      Parts: `make eprom`, `kernel`, `isrs`, `system`.
+    #card([Process states], [
+      #entry([READY], [can be scheduled])
+      #entry([RUNNING], [currently executing])
+      #entry([BLOCKED], [sleeping on a wait queue])
+      #entry([STOPPED], [paused by `SIGTSTP`])
+      #entry([ZOMBIE], [finished; parent can collect status])
+      Timer interrupts and `yield()` move a running process back to `READY`.
+      `wakeup()` moves a waiter to `READY`; `SIGCONT` resumes a stopped process.
     ], color: teal)
 
     #card([Compile & size a program], [
