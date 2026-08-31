@@ -10,6 +10,7 @@
 #let amber = rgb("c8861a")
 #let navy = rgb("183039")
 #let border = rgb("cddfe1")
+#let release_version = read("config/cheatsheet-release.txt").trim()
 
 #set page(
   paper: "a4",
@@ -21,9 +22,11 @@
     #line(length: 100%, stroke: 0.4pt + border)
     #v(1.2pt)
     #grid(
-      columns: (1fr, auto),
+      columns: (1fr, auto, auto),
+      gutter: 5pt,
       [PicoOS · interactive shell and bundled user applications],
       [runtime quick reference],
+      [#release_version],
     )
   ],
 )
