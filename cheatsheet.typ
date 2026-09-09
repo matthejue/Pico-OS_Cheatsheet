@@ -18,30 +18,29 @@
   margin: (left: 6.5mm, right: 6.5mm, top: 6mm, bottom: 7mm),
   fill: paper,
   footer: context [
-    #set text(font: "Cantarell", size: 4.7pt, fill: muted)
+    #set text(font: "Cantarell", size: 4.8pt, fill: muted)
     #line(length: 100%, stroke: 0.4pt + border)
     #v(1.2pt)
     #grid(
       columns: (1fr, auto, auto),
       gutter: 5pt,
-      [PicoOS · interactive shell and bundled user applications],
-      [runtime quick reference],
+      [PicoOS · shell and bundled user applications],
+      [runtime overview],
       [#release_version],
     )
   ],
 )
-#set text(font: "Cantarell", size: 7.8pt, fill: ink)
-#set par(justify: true, leading: 0.37em, spacing: 1.9pt)
-#set list(indent: 6.5pt, body-indent: 2.5pt, spacing: 0.8pt)
-#show raw: set text(font: "Fira Code", size: 6.4pt)
+#set text(font: "Cantarell", size: 9.1pt, fill: ink)
+#set par(leading: 0.43em, spacing: 2.5pt)
+#show raw: set text(font: "Fira Code", size: 7.1pt)
 #show strong: set text(fill: teal)
 
 #let mono(body) = box(
   fill: soft,
   stroke: 0.3pt + border,
   radius: 1pt,
-  inset: (x: 1.5pt, y: 0.4pt),
-  text(font: "Fira Code", size: 6.3pt, fill: rgb("17545c"), body),
+  inset: (x: 1.7pt, y: 0.5pt),
+  text(font: "Fira Code", size: 7pt, fill: rgb("17545c"), body),
 )
 
 #let codeblock(body) = block(
@@ -49,8 +48,8 @@
   fill: navy,
   stroke: 0.45pt + teal.transparentize(45%),
   radius: 1.5pt,
-  inset: 2.5pt,
-  text(font: "Fira Code", size: 6.3pt, fill: rgb("e7f7f5"), body),
+  inset: 2.8pt,
+  text(font: "Fira Code", size: 7.05pt, fill: rgb("e7f7f5"), body),
 )
 
 #let card(title, body, color: teal) = block(
@@ -58,34 +57,34 @@
   fill: panel,
   stroke: 0.45pt + border,
   radius: 2pt,
-  inset: (left: 3.2pt, right: 3.2pt, top: 3pt, bottom: 4pt),
+  inset: (left: 3.6pt, right: 3.6pt, top: 4pt, bottom: 5.3pt),
   breakable: true,
   [
     #grid(
       columns: (1.8pt, 1fr),
       gutter: 3pt,
-      rect(width: 1.8pt, height: 7pt, radius: 0.8pt, fill: color),
-      text(size: 8.8pt, weight: "bold", fill: ink, title),
+      rect(width: 1.8pt, height: 7.5pt, radius: 0.8pt, fill: color),
+      text(size: 9.8pt, weight: "bold", fill: ink, title),
     )
-    #v(1.1pt)
+    #v(1.5pt)
     #body
   ],
 )
 
 #let entry(left, right) = grid(
   columns: (auto, 1fr),
-  gutter: 2.1pt,
+  gutter: 2.3pt,
   align: top,
   mono(left),
   right,
 )
 
 #let signal(number, name, effect) = grid(
-  columns: (12pt, 45pt, 1fr),
+  columns: (14pt, 50pt, 1fr),
   gutter: 2pt,
   align: top,
-  text(font: "Fira Code", size: 6.3pt, fill: coral, number),
-  text(font: "Fira Code", size: 6.3pt, fill: rgb("17545c"), name),
+  text(font: "Fira Code", size: 7pt, fill: coral, number),
+  text(font: "Fira Code", size: 7pt, fill: rgb("17545c"), name),
   effect,
 )
 
@@ -106,7 +105,7 @@
       #h(4pt)
       #text(size: 14.5pt, weight: "bold", fill: ink)[User cheatsheet]
     ],
-    text(size: 5.3pt, fill: muted)[Start · shell · files · jobs · signals · every bundled command],
+    text(size: 5.3pt, fill: muted)[Start · shell · files · jobs · signals · commands],
   )
 ]
 #v(3.5pt)
@@ -116,194 +115,151 @@
   gutter: 4mm,
   align: top,
   [
-    #card([Start the release], [
+    #card([Start], [
       #entry([Linux/macOS], [`./download-tools.sh` → `./start-picoos.sh`])
       #entry([Windows], [`.\download-tools.ps1` → `.\start-picoos.ps1`])
-      #entry([Android], [use the Linux scripts in Termux])
-      With the Debug TUI: press `c` to boot, `V` for the raw PicoOS terminal,
-      and `Ctrl+]` to return. `--notui` / PowerShell `-NoTui` starts directly
-      in the terminal.
+      #entry([Android], [run the Linux scripts in Termux])
+      #entry([Debug TUI], [`c` boot → `V` terminal → `Ctrl+]` back])
+      #entry([No TUI], [`--notui` / PowerShell `-NoTui`])
     ])
 
-    #card([Release archive map], [
-      #entry([boot/], [EPROM reset/bootloader image])
-      #entry([kernel/], [`kernel.bin` plus layout/debug metadata])
-      #entry([system/], [`init.bin`: PID 1, config + shell restart policy])
-      #entry([user/], [shell and 16 commands; default `PATH=./user`])
-      #entry([config/], [startup environment + emulator options])
-      #entry([device/], [`terminal.dev` is only a visible marker])
-      Root scripts download tools and launch the runtime. The real terminal is
-      the virtual path `/device/terminal`.
+    #card([Shell syntax], [
+      #entry([NAME.bin], [search `PATH` (default `/user`)])
+      #entry([PATH/NAME], [load directly])
+      #entry([#raw("'...' / \"...\"")], [one argument])
+      #entry([`$NAME`], [value; unknown → empty])
+      #entry([`$?` / `$!`], [last status / tracked PID])
+      Variables expand in arguments, even in single quotes; not in command names or redirect paths.
+    ])
+
+    #card([Line editing], [
+      #entry([Enter], [run; maximum 79 characters])
+      #entry([Backspace / Del], [erase character])
+      #entry([Ctrl+U / Ctrl+W], [erase line / word])
+      #entry([↑ / ↓], [8 recent commands; ↓ restores draft])
+      #entry([Tab], [insert one space; no completion])
+      #entry([← / →], [not supported])
     ], color: green)
 
-    #card([Shell grammar], [
-      Names without `/` are searched in colon-separated `PATH`; paths with
-      `/` load directly. Relative `PATH` entries keep working after `cd`.
-      #codeblock[#raw("echo.bin 'hello PicoOS'\n./user/pwd.bin\necho.bin $PATH status=$? pid=$!")]
-      Single/double quotes group arguments and are removed. `$NAME` expands an
-      environment variable; `$?` is the latest foreground status and `$!` the
-      latest background/stopped PID. `echo.bin` alone turns literal `\n` into
-      a newline.
+    #card([Shell built-ins], [
+      #entry([cd DIR], [change directory])
+      #entry([export N=V], [set variable])
+      #entry([eval CMD], [evaluate command])
+      #entry([load PATH], [load without running; print PID])
+      #entry([run PID [ARGS]], [run loaded PID])
+      #entry([unload PID], [remove process])
+      #entry([fg / bg], [continue tracked job])
+      #entry([exit], [end shell; init starts a fresh one])
+      #entry([run-shell-tests FILE], [internal test runner])
     ])
 
-    #card([Editing & history], [
-      #entry([Enter], [run the line; max 79 characters])
-      #entry([Backspace / Del], [erase one character])
-      #entry([Ctrl+U / Ctrl+W], [erase line / previous word])
-      #entry([↑ / ↓], [navigate 8 recent commands + draft])
-      Left/right are consumed but do not move the cursor. Tab is inserted as
-      input when space remains.
+    #card([Environment], [
+      #entry([export N=V], [session + future children])
+      #entry([export N=], [empty, still defined])
+      #entry([unset], [not available; `exit` resets session])
+      Startup defaults: `/config/environment.txt`.
     ], color: green)
 
-    #card([All shell built-ins], [
-      #entry([cd DIR], [change this shell's working directory])
-      #entry([export N=V], [set a session environment variable])
-      #entry([eval COMMAND], [evaluate again in the same shell])
-      #entry([load PATH], [create a `NEW` process; print its PID])
-      #entry([run PID [ARGS]], [start a loaded PID; accepts `&`, `>`, `>>`])
-      #entry([unload PID], [remove a selected process])
-      #entry([fg / bg], [continue the one tracked job])
-      #entry([exit], [end session; init launches a fresh shell])
-      #entry([run-shell-tests FILE], [internal scripted-test manifest runner])
-    ])
+    #card([Results], [
+      #entry([`$?`], [last command / foreground result])
+      #entry([0 / 1], [success / usual error])
+      Built-ins set 0/1. External `CMD &` keeps `$?`; `run PID &` sets 0 on success.
+    ], color: green)
 
-    #card([Shell limits], [
-      No pipes, `<`, stderr redirection, wildcards, aliases, `$(...)`, `;`, or
-      general backslash escaping. Exactly one final output redirect and one
-      trailing background operator are recognized.
+    #card([Not supported], [
+      Wildcards · aliases · `$(...)` · `;` · general escapes · bare `N=V` assignments
     ], color: amber)
-
-    #card([Quick workflow], [
-      #codeblock[#raw("pwd.bin\nls.bin -a\nmkdir.bin demo\necho.bin 'hello\\nPicoOS' > demo/a.txt\ncat.bin demo/a.txt\ncp.bin demo/a.txt demo/b.txt\nps.bin\nrm.bin demo/a.txt demo/b.txt\nrmdir.bin demo\npoweroff.bin")]
-    ], color: green)
   ],
   [
     #card([Application help], [
-      A sole `-h` or `--help` prints usage for every bundled application
-      *except `echo.bin`*, which prints it as ordinary text. The complete
-      argument forms are listed below.
+      Use a sole `-h` / `--help` for all 18 applications except `echo.bin`. Also: `cd -h`.
     ], color: amber)
 
     #card([Print, inspect & edit], [
-      #entry([echo.bin TEXT...], [print words; supports literal `\n`, not `-n`])
-      #entry([cat.bin FILE...], [print each file; never reads stdin])
-      #entry([pwd.bin], [print the current directory])
-      #entry([ls.bin [-a] [DIR]], [list `.` by default; `-a` shows dot names])
-      #entry([ps.bin], [print every process as PID + binary path])
-      #entry([sed.bin EXPR FILE], [write the transformed contents to stdout])
-      `ls.bin` prefixes directories with `d` and files with `-`; order is the
-      host order. It has no long, sort, or recursive mode.
+      #entry([echo.bin TEXT...], [print; literal `\n` → newline])
+      #entry([cat.bin [FILE...]], [print files or stdin])
+      #entry([pwd.bin], [current directory])
+      #entry([ls.bin [-a] [DIR]], [list; `-a` includes hidden])
+      #entry([ps.bin], [PID + binary path])
+      #entry([uname.bin], [PicoOS version])
+      #entry([sed.bin EXPR], [edit stdin → stdout])
     ], color: green)
 
-    #card([`sed.bin` expressions], [
-      #codeblock[#raw("sed.bin '5iNEW' file.txt    # insert before 5\nsed.bin '5cNEW' file.txt    # change 5\nsed.bin '5aNEW' file.txt    # append after 5\nsed.bin '/word/iNEW' file.txt # before matches")]
-      Only these four forms exist. The pattern is a simple substring; the full
-      file is loaded into memory. Redirect to replace indirectly:
-      #codeblock[#raw("sed.bin '2cNEW' a.txt > b.txt\nmv.bin b.txt a.txt")]
-    ], color: coral)
-
-    #card([Create, copy, move & remove], [
-      #entry([touch.bin FILE...], [create or update timestamps; keep contents])
-      #entry([cp.bin SRC DST], [copy one regular file])
-      #entry([mv.bin SRC DST], [move/rename one file or directory])
-      #entry([mkdir.bin DIR...], [create each directory; no `-p`])
-      #entry([rm.bin FILE...], [remove files; no `-f` / `-r`])
-      #entry([rmdir.bin DIR...], [remove empty directories only])
-      Multi-path commands continue after an individual error and still return
-      failure. `cp` and `mv` accept exactly two paths and no options.
+    #card([Create, copy & remove], [
+      #entry([touch.bin FILE...], [create/update])
+      #entry([cp.bin SRC DST], [copy file])
+      #entry([mv.bin SRC DST], [move/rename file or directory])
+      #entry([mkdir.bin DIR...], [create directories])
+      #entry([rm.bin FILE...], [remove files])
+      #entry([rmdir.bin DIR...], [remove empty directories])
     ], color: green)
 
     #card([Processes & power], [
-      #entry([count.bin [DELAY]], [count forever; default loop delay `25000`])
-      #entry([kill.bin [SIG] PID], [default `SIGKILL`; name or number])
-      #entry([poweroff.bin], [halt PicoOS / emulator execution])
-      #entry([reboot.bin], [restart bootloader, kernel, init, and shell])
-      #entry([shell.bin], [start another shell; accepts no arguments])
-      `DELAY` is a busy-loop count, not milliseconds; `count.bin` yields after
-      every printed value.
+      #entry([count.bin [DELAY]], [count forever; default `25000`])
+      #entry([kill.bin [SIG] PID], [default `SIGKILL`])
+      #entry([poweroff.bin], [halt])
+      #entry([reboot.bin], [full PicoOS reboot])
+      #entry([shell.bin], [new shell])
+      `DELAY` ≥ 0 counts loop iterations, not milliseconds.
     ], color: coral)
 
-    #card([Output redirection], [
-      #entry([CMD > FILE], [create/empty, then write stdout])
-      #entry([CMD >> FILE], [create or append stdout])
-      #codeblock[#raw("echo.bin first > notes.txt\necho.bin next >> notes.txt\ncount.bin 0 > counts.txt &")]
-      The path must be last (before optional `&`). Diagnostics use stderr and
-      remain visible. There is no input or stderr redirection.
+    #card([`sed.bin` expressions], [
+      #entry([#raw("'5iTEXT'")], [insert before line 5])
+      #entry([#raw("'5cTEXT'")], [replace line 5])
+      #entry([#raw("'5aTEXT'")], [append after line 5])
+      #entry([#raw("'/word/iTEXT'")], [insert before each matching line])
+      #entry([#raw("'s/old/new/'")], [first literal match per line])
+      Input via `< FILE` or `|`; no file operand or regex.
+      #codeblock[#raw("sed.bin '2cNEW' < a.txt > b.txt")]
     ], color: coral)
 
-    #card([Files are host-backed], [
-      PicoOS has no on-device disk. File and directory operations are forwarded
-      over UART to the host tree from which the emulator was launched. Relative
-      operands use the process working directory; `cd` changes PicoOS path state,
-      not the emulator process's own directory.
+    #card([Type a file with `cat.bin`], [
+      #codeblock[#raw("cat.bin > notes.txt")]
+      Enter writes a line; Backspace / Del edits; Ctrl+D finishes input.
+    ], color: coral)
+
+    #card([Command limits], [
+      `echo`: no `-n` · `mkdir`: no `-p` · `rm`: no `-r/-f` · `ls`: no sorting, long or recursive mode
     ], color: amber)
   ],
   [
-    #card([Foreground & background jobs], [
-      #entry([COMMAND &], [start without waiting; set `$!`])
-      #entry([Ctrl+Z], [send `SIGTSTP`; remember stopped PID])
-      #entry([fg], [give it terminal input, `SIGCONT`, then wait])
-      #entry([bg], [`SIGCONT` without waiting/input ownership])
-      #entry([Ctrl+C], [send `SIGINT` to the foreground process])
-      #codeblock[#raw("count.bin 0 &\necho.bin background=$!\nfg                 # Ctrl+Z while running\nbg")]
-      Only the most recent background/stopped PID is tracked—there is no jobs
-      list. A background terminal read stops with `SIGTTIN`; use `fg` to resume
-      it with input ownership.
+    #card([Redirection], [
+      #entry([CMD < FILE], [stdin from file])
+      #entry([CMD > FILE], [replace stdout file])
+      #entry([CMD >> FILE], [append stdout file])
+      #entry([CMD 2> FILE], [replace stderr file])
+      #entry([CMD 2>> FILE], [append stderr file])
+      Put redirects after arguments, with a space before each operator; optional `&` last. Also works with `run`.
+      #codeblock[#raw("cat.bin < a.txt > b.txt 2> err.txt\ncat.bin missing 2>> err.txt\ncat.bin missing 2> /device/null.dev")]
+      `/device/null.dev` discards output; `/device/terminal.dev` writes to the terminal.
     ])
 
-    #card([`kill.bin`: every signal], [
-      #signal([0], [probe], [PID exists; send nothing])
-      #signal([2], [SIGINT], [terminate → status 130])
-      #signal([9], [SIGKILL], [terminate → status 137])
-      #signal([18], [SIGCONT], [resume stopped process])
-      #signal([19], [SIGSTOP], [stop → status 147])
-      #signal([20], [SIGTSTP], [stop → status 148])
-      #signal([21], [SIGTTIN], [stop terminal reader → status 149])
-      #codeblock[#raw("kill.bin 42              # SIGKILL\nkill.bin SIGTSTP 42\nkill.bin 18 42          # SIGCONT\nkill.bin 0 42           # existence check")]
-      Names have no leading `-`. Only 0 and the six listed numbers are valid.
-      Actions are fixed; PicoOS cannot catch or ignore signals.
+    #card([Pipelines & command files], [
+      #codeblock[#raw("cat.bin a.txt | sed.bin 's/old/new/'\nshell.bin < commands.txt")]
+      One `|`: left command finishes before right starts. Use finite external commands, without `&`, in a writable directory. Command files: one command per line; EOF exits.
+    ], color: green)
+
+    #card([Jobs & terminal keys], [
+      #entry([CMD &], [start background; set `$!`])
+      #entry([Ctrl+Z], [`SIGTSTP`; remember PID])
+      #entry([fg], [foreground + `SIGCONT`])
+      #entry([bg], [background + `SIGCONT`])
+      #entry([Ctrl+C], [`SIGINT` foreground job])
+      #entry([SIGTTIN], [background terminal read stops])
+      One tracked job only; use `fg` for terminal input.
+    ])
+
+    #card([`kill.bin` signals], [
+      #signal([0], [probe], [check PID only])
+      #signal([2], [SIGINT], [terminate → 130])
+      #signal([9], [SIGKILL], [terminate → 137])
+      #signal([18], [SIGCONT], [continue])
+      #signal([19], [SIGSTOP], [stop → 147])
+      #signal([20], [SIGTSTP], [stop → 148])
+      #signal([21], [SIGTTIN], [stop input → 149])
+      #codeblock[#raw("kill.bin 42          # SIGKILL\nkill.bin SIGTSTP 42\nkill.bin 18 42      # SIGCONT\nkill.bin 0 42       # probe")]
+      Only these signals; names/numbers have no leading `-`. Fixed actions. Arrows show result status.
     ], color: coral)
-
-    #card([Statuses & process messages], [
-      Every external launch prints `process with pid N created`. Foreground
-      completion sets `$?`; a background launch leaves `$?` unchanged and sets
-      `$!`. Normal success is `0`, usage/operation failure usually `1`.
-      Signal results use the statuses shown above. `ps.bin` shows live PIDs.
-    ], color: green)
-
-    #card([Environment], [
-      #entry([export N=V], [set/replace in this shell and future children])
-      #entry([`$N`], [expand a stored value; an unknown name becomes empty])
-      Startup values are `NAME=value` lines in `config/environment.txt`
-      (under 256 cells total), normally `PATH=./user`.
-
-      There is *no `unset` built-in*. `export N=` leaves `N` present but empty.
-      Use `exit` to let init start a fresh shell and reset session-only exports,
-      or edit `config/environment.txt` before boot for a persistent default.
-    ], color: green)
-
-    #card([Loading bar], [
-      Presence of `PICOOS_LOADING_BAR` enables progress for program loading and
-      larger file reads:
-      #codeblock[#raw("export PICOOS_LOADING_BAR=true")]
-      The value is irrelevant—even empty enables it. The current build has
-      `loading_bar_enabled=true`, so init sets it for every shell. With no
-      `unset`, it cannot be disabled interactively. Source builds can toggle
-      `config/config.header`; when off, export it or add it to
-      `config/environment.txt` to enable bars. `cat`, `cp`, and `sed` suppress
-      it in their own process to keep output clean.
-    ], color: amber)
-
-    #card([DMA loading], [
-      DMA accelerates kernel, init, and later program-image copies. Scheduled
-      program loads sleep for completion so other ready processes can run.
-      #entry([Release], [`./start-picoos.sh --dma` / `-M`])
-      #entry([PowerShell], [`.\start-picoos.ps1 -Dma`])
-      #entry([Source tree], [`make bootload-dma`])
-      #entry([No TUI], [`make bootload-notui DMA=1`])
-      *DMA is not a PicoOS environment variable.* Without these launcher/build
-      switches, PicoOS automatically uses its UART polling/chunked fallback.
-    ], color: teal)
 
   ],
 )
