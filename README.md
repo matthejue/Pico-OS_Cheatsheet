@@ -1,4 +1,4 @@
-# PicoOS cheatsheet
+# PicoOS Cheatsheet
 
 Build the landscape PDF with:
 
@@ -21,6 +21,10 @@ Reviewed on 2026-10-08 against PicoOS `v1.1.5`, commit
 2026-09-09 cheatsheet update. Covers all 18 bundled user applications and
 the 9 current shell built-ins. The footer identifies the reviewed PicoOS
 version separately from this cheatsheet's release version.
+
+The palette and fonts follow `Pico-OS_Presentation/styles/index.css`.
+Command examples use pale panels with syntax accents and a prompt on each
+line: `$` for the host terminal and `PicoOS>` for the PicoOS shell.
 
 ## Releases
 
