@@ -14,6 +14,14 @@ distribution (`Cantarell` and `Fira Code`).
 The same actions are available in VS Code through **Command Palette → Tasks:
 Run Task** (`Ctrl+Shift+P`). Choose one of the tasks prefixed with `Make:`.
 
+## Content coverage
+
+Reviewed on 2026-10-08 against PicoOS `v1.1.5`, commit
+`7647e8be5d3c7b3f9ff3f92c6a00be29ca92517c`, including changes since the
+2026-09-09 cheatsheet update. Covers all 18 bundled user applications and
+the 9 current shell built-ins. The footer identifies the reviewed PicoOS
+version separately from this cheatsheet's release version.
+
 ## Releases
 
 Pushing a tag whose name starts with `v` builds `picoos-cheatsheet.pdf` and
